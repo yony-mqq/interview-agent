@@ -1,0 +1,30 @@
+{
+  "name": "interview-agent-server",
+  "version": "1.0.0",
+  "description": "RAG-based interview assistant backend service",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@alicloud/pop-core": "^1.8.0",
+    "better-sqlite3": "^12.11.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "nodemailer": "^9.0.1",
+    "openai": "^4.77.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^18.19.0",
+    "@types/nodemailer": "^8.0.1",
+    "tsx": "^3.14.0",
+    "typescript": "^5.3.3"
+  }
+}

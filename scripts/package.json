@@ -1,0 +1,16 @@
+{
+  "name": "interview-agent-scripts",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-index": "tsx build-index.ts"
+  },
+  "dependencies": {
+    "openai": "^4.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^3.14.0",
+    "typescript": "^5.0.0"
+  }
+}

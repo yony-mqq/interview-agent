@@ -1,0 +1,269 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg-warm: #f8f9fa;
+  --text: #2d2d2d;
+  --text-secondary: #5a5a5a;
+  --text-muted: #888888;
+  --brand: #1B365D;
+  --brand-light: #EEF2F7;
+  --border: #e8e8e8;
+  --border-strong: #d0d0d0;
+  --accent: #2563eb;
+  --max-width: 960px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--brand); text-decoration: none; transition: opacity 0.2s; }
+a:hover { opacity: 0.7; }
+
+/* ========== HEADER ========== */
+.header {
+  background: var(--brand);
+  color: #fff;
+  padding: 40px 0;
+}
+.header-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.header-left { flex: 1; }
+.header-name {
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+.header-meta {
+  font-size: 15px;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+.header-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.header-tag {
+  background: rgba(255,255,255,0.15);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.header-right {
+  text-align: right;
+  font-size: 14px;
+  line-height: 1.9;
+  opacity: 0.95;
+}
+.header-right a { color: #fff; }
+
+/* ========== MAIN LAYOUT ========== */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  gap: 40px;
+  padding-top: 40px;
+  padding-bottom: 60px;
+}
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+}
+.main { flex: 1; min-width: 0; }
+
+/* ========== SECTIONS ========== */
+.section { margin-bottom: 36px; }
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--brand);
+  letter-spacing: 1px;
+}
+
+/* ========== SIDEBAR BLOCKS ========== */
+.intro-list {
+  list-style: none;
+  padding: 0;
+}
+.intro-list li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+.intro-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 6px;
+  background: var(--brand);
+  border-radius: 50%;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.skill-tag {
+  background: var(--brand-light);
+  color: var(--brand);
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.skill-tag:hover {
+  background: var(--brand);
+  color: #fff;
+}
+
+.edu-block { margin-top: 4px; }
+.edu-school {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.edu-major {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.edu-time {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ========== EXPERIENCE ========== */
+.exp-item { margin-bottom: 32px; }
+.exp-item:last-child { margin-bottom: 0; }
+
+.exp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-bottom: 4px;
+}
+.exp-company {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+}
+.exp-date {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.exp-role {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+}
+
+.dim-block {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: var(--bg-warm);
+  border-radius: 6px;
+  border-left: 3px solid var(--brand);
+}
+.dim-block:last-child { margin-bottom: 0; }
+.dim-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+.dim-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+.dim-row:last-child { margin-bottom: 0; }
+.dim-label {
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  width: 38px;
+}
+.dim-text { color: var(--text-secondary); flex: 1; }
+.dim-text strong { color: var(--brand); font-weight: 600; }
+
+/* ========== C-Trip & Tianzhi simple blocks ========== */
+.simple-block {
+  padding: 14px 16px;
+  background: var(--bg-warm);
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+.simple-block:last-child { margin-bottom: 0; }
+.simple-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--brand);
+  margin-bottom: 6px;
+}
+.simple-text {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ========== ADVANTAGE ========== */
+.advantage {
+  background: var(--brand-light);
+  padding: 20px 24px;
+  border-radius: 6px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--brand);
+}
+
+/* ========== RESPONSIVE ========== */
+@media screen and (max-width: 768px) {
+  .header-inner { padding: 0 24px; }
+  .header-name { font-size: 28px; }
+  .header-right { text-align: left; width: 100%; }
+  .container {
+    flex-direction: column;
+    padding: 32px 24px;
+    gap: 32px;
+  }
+  .sidebar { width: 100%; }
+}
