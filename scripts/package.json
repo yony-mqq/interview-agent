@@ -3,7 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build-index": "tsx build-index.ts"
+    "build-index": "tsx build-index.ts",
+    "eval:mine": "tsx eval/mine-questions.ts",
+    "eval:generate": "tsx eval/generate-answers.ts",
+    "eval:run": "tsx eval/run-evaluation.ts"
   },
   "dependencies": {
     "openai": "^4.0.0",

@@ -58,4 +58,14 @@ CREATE TABLE IF NOT EXISTS conversation_summaries (
   FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS idx_summaries_conversation_id ON conversation_summaries(conversation_id);
+
+CREATE TABLE IF NOT EXISTS response_cache (
+  query_hash TEXT PRIMARY KEY,
+  query TEXT NOT NULL,
+  response TEXT NOT NULL,
+  model TEXT NOT NULL,
+  hit_count INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_cache_created_at ON response_cache(created_at);
 `;

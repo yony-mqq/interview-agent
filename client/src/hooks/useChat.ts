@@ -1,11 +1,16 @@
 import { useState, useCallback, useRef } from 'react';
-import type { Message } from '../types/conversation.js';
+import type { Message, ThinkingStep, StreamEvent } from '../types/conversation.js';
 import { getAuthHeaders } from '../utils/auth.js';
 
 interface UseChatOptions {
   apiUrl: string;
   userId: string;
   conversationId: string | null;
+}
+
+let stepIdCounter = 0;
+function generateStepId(): string {
+  return `step-${++stepIdCounter}-${Date.now()}`;
 }
 
 export function useChat({ apiUrl, userId, conversationId }: UseChatOptions) {
@@ -20,6 +25,9 @@ export function useChat({ apiUrl, userId, conversationId }: UseChatOptions) {
   const conversationIdRef = useRef(conversationId);
   conversationIdRef.current = conversationId;
 
+  // 当前流式请求的思考步骤累积器
+  const thinkingStepsRef = useRef<ThinkingStep[]>([]);
+
   const loadMessages = useCallback((newMessages: Message[]) => {
     setMessages(newMessages);
   }, []);
@@ -32,8 +40,11 @@ export function useChat({ apiUrl, userId, conversationId }: UseChatOptions) {
     async (text: string) => {
       if (!text.trim()) return;
 
+      // 重置当前请求的思考步骤
+      thinkingStepsRef.current = [];
+
       const userMessage: Message = { role: 'user', content: text };
-      const assistantMessage: Message = { role: 'assistant', content: '' };
+      const assistantMessage: Message = { role: 'assistant', content: '', thinkingSteps: [] };
 
       setMessagesRef.current(prev => [...prev, userMessage, assistantMessage]);
       setIsLoading(true);
@@ -80,19 +91,94 @@ export function useChat({ apiUrl, userId, conversationId }: UseChatOptions) {
               if (data === '[DONE]') break;
 
               try {
-                const parsed = JSON.parse(data);
+                const parsed = JSON.parse(data) as StreamEvent;
+
                 if (parsed.error) {
                   throw new Error(parsed.error);
                 }
-                if (parsed.content) {
-                  setMessagesRef.current(prev => {
-                    const last = prev[prev.length - 1];
-                    if (!last || last.role !== 'assistant') return prev;
-                    return [
-                      ...prev.slice(0, -1),
-                      { ...last, content: last.content + parsed.content },
-                    ];
-                  });
+
+                switch (parsed.type) {
+                  case 'thought': {
+                    thinkingStepsRef.current.push({
+                      id: generateStepId(),
+                      type: 'thought',
+                      icon: '🤔',
+                      title: '正在分析意图',
+                      content: parsed.content || '',
+                      timestamp: Date.now(),
+                    });
+                    // 触发一次消息更新，让思考过程实时显示
+                    setMessagesRef.current(prev => {
+                      const last = prev[prev.length - 1];
+                      if (!last || last.role !== 'assistant') return prev;
+                      return [
+                        ...prev.slice(0, -1),
+                        { ...last, thinkingSteps: [...thinkingStepsRef.current] },
+                      ];
+                    });
+                    break;
+                  }
+
+                  case 'tool_call': {
+                    thinkingStepsRef.current.push({
+                      id: generateStepId(),
+                      type: 'tool_call',
+                      icon: '🔍',
+                      title: `调用 ${parsed.name || '工具'}`,
+                      content: parsed.input || '',
+                      timestamp: Date.now(),
+                    });
+                    setMessagesRef.current(prev => {
+                      const last = prev[prev.length - 1];
+                      if (!last || last.role !== 'assistant') return prev;
+                      return [
+                        ...prev.slice(0, -1),
+                        { ...last, thinkingSteps: [...thinkingStepsRef.current] },
+                      ];
+                    });
+                    break;
+                  }
+
+                  case 'tool_result': {
+                    thinkingStepsRef.current.push({
+                      id: generateStepId(),
+                      type: 'tool_result',
+                      icon: '📄',
+                      title: `${parsed.name || '工具'} 返回结果`,
+                      content: parsed.output || '',
+                      timestamp: Date.now(),
+                    });
+                    setMessagesRef.current(prev => {
+                      const last = prev[prev.length - 1];
+                      if (!last || last.role !== 'assistant') return prev;
+                      return [
+                        ...prev.slice(0, -1),
+                        { ...last, thinkingSteps: [...thinkingStepsRef.current] },
+                      ];
+                    });
+                    break;
+                  }
+
+                  case 'content': {
+                    if (parsed.content) {
+                      setMessagesRef.current(prev => {
+                        const last = prev[prev.length - 1];
+                        if (!last || last.role !== 'assistant') return prev;
+                        return [
+                          ...prev.slice(0, -1),
+                          {
+                            ...last,
+                            content: last.content + parsed.content,
+                            thinkingSteps: [...thinkingStepsRef.current],
+                          },
+                        ];
+                      });
+                    }
+                    break;
+                  }
+
+                  default:
+                    break;
                 }
               } catch {
                 // skip invalid JSON
@@ -117,6 +203,7 @@ export function useChat({ apiUrl, userId, conversationId }: UseChatOptions) {
       } finally {
         setIsLoading(false);
         abortControllerRef.current = null;
+        thinkingStepsRef.current = [];
       }
     },
     [apiUrl, userId]

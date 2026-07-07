@@ -8,16 +8,18 @@ const client = new OpenAI({
 });
 
 export async function* streamChat(
-  messages: Message[]
+  messages: Message[],
+  model: 'qwen-plus' | 'qwen-turbo' = 'qwen-plus'
 ): AsyncGenerator<string, void, undefined> {
   try {
     const stream = await client.chat.completions.create({
-      model: 'qwen-plus',
+      model,
       messages: messages.map((m) => ({
         role: m.role,
         content: m.content,
       })),
       stream: true,
+      max_tokens: model === 'qwen-turbo' ? 600 : 1000,
     });
 
     for await (const chunk of stream) {
