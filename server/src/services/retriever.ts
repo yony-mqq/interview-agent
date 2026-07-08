@@ -50,15 +50,20 @@ function cosineSimilarity(a: number[], b: number[]): number {
 
 const SIMILARITY_THRESHOLD = 0.65;
 
+export interface RetrievalResult {
+  chunks: VectorChunk[];
+  bestScore: number;
+}
+
 export async function retrieveRelevantChunks(
   query: string,
   topK: number = 3
-): Promise<VectorChunk[]> {
+): Promise<RetrievalResult> {
   const store = loadVectorStore();
 
   if (store.chunks.length === 0) {
     console.warn('[Retriever] No chunks available for retrieval');
-    return [];
+    return { chunks: [], bestScore: 0 };
   }
 
   const queryEmbedding = await getEmbedding(query);
@@ -70,6 +75,8 @@ export async function retrieveRelevantChunks(
 
   scored.sort((a, b) => b.score - a.score);
 
+  const bestScore = scored[0]?.score ?? 0;
+
   const topChunks = scored
     .slice(0, topK)
     .filter((item) => item.score >= SIMILARITY_THRESHOLD)
@@ -77,8 +84,8 @@ export async function retrieveRelevantChunks(
 
   console.log(
     `[Retriever] Retrieved ${topChunks.length} chunks for query: "${query.slice(0, 50)}..." ` +
-      `(best score: ${scored[0]?.score.toFixed(3) ?? 'N/A'})`
+      `(best score: ${bestScore.toFixed(3)})`
   );
 
-  return topChunks;
+  return { chunks: topChunks, bestScore };
 }

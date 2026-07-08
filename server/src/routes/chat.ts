@@ -141,10 +141,10 @@ router.post('/chat', async (req: Request, res: Response): Promise<void> => {
     let contextText = '';
     let chunksCount = 0;
     try {
-      const chunks = await retrieveRelevantChunks(safeMessage, 3);
-      chunksCount = chunks.length;
+      const result = await retrieveRelevantChunks(safeMessage, 3);
+      chunksCount = result.chunks.length;
       if (chunksCount > 0) {
-        contextText = chunks
+        contextText = result.chunks
           .map((chunk, i) => `[${i + 1}] ${chunk.title}\n${chunk.content}`)
           .join('\n\n');
       }

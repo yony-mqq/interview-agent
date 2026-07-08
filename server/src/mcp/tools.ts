@@ -25,7 +25,7 @@ const KNOWLEDGE_DIR = resolve(__dirname, '../../../knowledge');
 async function searchResume(args: Record<string, unknown>): Promise<MCPToolResult> {
   const query = String(args.query || '');
   const topK = typeof args.topK === 'number' ? args.topK : 3;
-  const chunks = await retrieveRelevantChunks(query, topK);
+  const { chunks } = await retrieveRelevantChunks(query, topK);
 
   return {
     content: [{
