@@ -179,6 +179,33 @@ export function Resume() {
 
           </div>
 
+          <div className="section">
+            <div className="section-title">项目经历</div>
+
+            <div className="exp-item">
+              <div className="exp-header">
+                <span className="exp-company">AI 智能面试教练（Personal Interview Agent）</span>
+                <span className="exp-date">2025.06 — 至今</span>
+              </div>
+              <div className="exp-role">独立开发 | React + TypeScript + Node.js + RAG + MCP</div>
+
+              <div className="dim-block">
+                <div className="dim-row">
+                  <span className="dim-label">RAG</span>
+                  <span className="dim-text">基于 RAG 架构构建面试回答助手：将个人经历 Markdown 知识库通过 text-embedding-v3 生成向量索引，面试提问时通过余弦相似度语义检索 Top3 相关文档注入 LLM 上下文，以第一人称生成结构化回答</span>
+                </div>
+                <div className="dim-row">
+                  <span className="dim-label">MCP</span>
+                  <span className="dim-text">实现 ReAct 推理流程 + MCP 工具调用：手写 HTTP MCP Server 暴露 5 个标准化工具（简历检索、技术栈查询、项目经验、性能数据、稳定性成果），支持 stdio 桥接兼容 Cursor / Claude Code 等外部工具</span>
+                </div>
+                <div className="dim-row">
+                  <span className="dim-label">记忆</span>
+                  <span className="dim-text">设计对话记忆管理机制：采用滑动窗口保留近期对话 + LLM 生成摘要保留长期记忆，4000 token 预算分配策略；前端 SSE 流式输出配合打字机效果，实现思考过程（Thought→Tool→Result→Answer）可视化</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </>

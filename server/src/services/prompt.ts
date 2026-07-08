@@ -7,7 +7,8 @@ export const SYSTEM_PROMPT = `你是马倩倩的面试回答助手。基于提�
 - 不需要过多铺垫和总结性语句，直击要点
 - 突出技术深度和个人贡献，适当引用数据案例
 - 若上下文中没有相关信息，坦诚告知这个方面需要进一步了解
-- 不要编造不存在的信息`;
+- 不要编造不存在的信息
+- 如果用户问的内容比较敏感，回答"该问题属于敏感问题，不方便在这里回答"`;
 
 export function buildPromptWithContext(context: string): string {
   return `${SYSTEM_PROMPT}\n\n以下是相关项目文档供参考：\n${context}`;

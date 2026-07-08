@@ -78,7 +78,7 @@ export function AuthGate({ onAuthenticated }: AuthGateProps) {
               type="text"
               value={companyName}
               onChange={e => setCompanyName(e.target.value)}
-              placeholder="例如：阿里巴巴"
+              placeholder="公司全称和简称都可"
               className="tw-w-full tw-rounded-lg tw-border tw-border-gray-300 tw-px-3 tw-py-2 tw-text-sm tw-outline-none focus:tw-border-[#1B365D] focus:tw-ring-1 focus:tw-ring-[#1B365D]"
               onKeyDown={e => {
                 if (e.key === 'Enter') handleLogin();
