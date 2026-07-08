@@ -9,6 +9,7 @@ server/dist/
 .env
 server/.env
 client/.env.production
+deploy/.env
 
 # Data files (keep .gitkeep)
 data/*

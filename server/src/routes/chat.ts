@@ -165,6 +165,33 @@ router.post('/chat', async (req: Request, res: Response): Promise<void> => {
       console.warn('[Chat] MCP call failed, proceeding without MCP context:', error);
     }
 
+    // ── 兜底：RAG + MCP 均无上下文时，直接返回"不知道"，不走 LLM ──
+    if (chunksCount === 0 && !mcpContext) {
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+      res.setHeader('X-Accel-Buffering', 'no');
+      res.flushHeaders();
+
+      sendEvent(res, { type: 'thought', content: thought, step: 1 });
+      sendEvent(res, { type: 'tool_call', name: 'retrieveRelevantChunks', input: safeMessage });
+      sendEvent(res, {
+        type: 'tool_result',
+        name: 'retrieveRelevantChunks',
+        output: '命中 0 条相关文档，未找到相关内容',
+      });
+      sendEvent(res, { type: 'content', content: '这个问题我目前没有相关信息，需要当面问候选人。' });
+      res.write('data: [DONE]\n\n');
+
+      if (conversationId) {
+        addMessage(conversationId, 'assistant', '这个问题我目前没有相关信息，需要当面问候选人。');
+        touchConversation(conversationId);
+      }
+
+      res.end();
+      return;
+    }
+
     // ═══════════════════════════════════════════════════════
     //  ReAct Step 4: Observation — Memory 上下文构建
     // ═══════════════════════════════════════════════════════
