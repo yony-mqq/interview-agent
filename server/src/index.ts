@@ -9,6 +9,7 @@ import accessRouter from './routes/access.js';
 import mcpRouter from './mcp/server.js';
 import { authMiddleware } from './middleware/auth.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { clearAllCache } from './services/cacheService.js';
 
 const app = express();
 const PORT = parseInt(process.env.PORT || '3001', 10);
@@ -34,6 +35,12 @@ app.use('/api', mcpRouter);
 app.use('/api', authMiddleware, chatRouter);
 app.use('/api', authMiddleware, conversationsRouter);
 app.use('/api', authMiddleware, speechRouter);
+
+// 管理接口：清空问答缓存
+app.post('/api/cache/clear', authMiddleware, (_req, res) => {
+  const deleted = clearAllCache();
+  res.json({ success: true, deleted });
+});
 
 // ── 全局错误处理中间件（必须放在所有路由之后）──────────────
 app.use(errorHandler);

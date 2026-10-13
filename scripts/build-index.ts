@@ -76,6 +76,17 @@ function splitMarkdown(
   filename: string
 ): { title: string; content: string; id: string }[] {
   const lines = content.split("\n");
+
+  // 提取文档级 H1 标题（# 开头的第一行主标题）
+  let docTitle = "";
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith("# ")) {
+      docTitle = trimmed.replace(/^#\s+/, "").trim();
+      break;
+    }
+  }
+
   const sections: { title: string; lines: string[] }[] = [];
   let currentTitle = "";
   let currentLines: string[] = [];
@@ -125,10 +136,13 @@ function splitMarkdown(
   let chunkIndex = 0;
 
   for (const item of merged) {
+    // 将文档级 H1 标题注入到每个 chunk 的 content 开头，提升检索命中率
+    const docTitlePrefix = docTitle ? `# ${docTitle}\n\n` : "";
+
     if (item.content.length <= CHUNK_MAX) {
       result.push({
         title: item.title,
-        content: item.content,
+        content: docTitlePrefix + item.content,
         id: `${baseName}_chunk_${chunkIndex++}`,
       });
     } else {
@@ -139,7 +153,7 @@ function splitMarkdown(
         if (subContent.length + para.length > CHUNK_MAX && subContent.length > 0) {
           result.push({
             title: item.title,
-            content: subContent.trim(),
+            content: docTitlePrefix + subContent.trim(),
             id: `${baseName}_chunk_${chunkIndex++}`,
           });
           subContent = para;
@@ -150,7 +164,7 @@ function splitMarkdown(
       if (subContent.trim()) {
         result.push({
           title: item.title,
-          content: subContent.trim(),
+          content: docTitlePrefix + subContent.trim(),
           id: `${baseName}_chunk_${chunkIndex++}`,
         });
       }

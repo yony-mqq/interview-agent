@@ -14,6 +14,11 @@ function md5(text: string): string {
   return crypto.createHash('md5').update(text, 'utf-8').digest('hex');
 }
 
+export function clearEmbeddingCache(): void {
+  embeddingCache.clear();
+  console.log('[Embedder] Embedding cache cleared');
+}
+
 export async function getEmbedding(text: string): Promise<number[]> {
   const cacheKey = md5(text.trim());
 

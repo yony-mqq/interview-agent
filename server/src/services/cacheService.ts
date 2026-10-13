@@ -92,3 +92,12 @@ export function cleanupExpiredCache(): number {
   const result = stmt.run(cutoff);
   return result.changes;
 }
+
+/**
+ * 清空全部缓存
+ */
+export function clearAllCache(): number {
+  const stmt = db.prepare('DELETE FROM response_cache');
+  const result = stmt.run();
+  return result.changes;
+}

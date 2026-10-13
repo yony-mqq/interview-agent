@@ -31,3 +31,6 @@ npminstall-debug.log
 # Temporary files
 *.tmp
 *.swp
+
+# 面试考点 (本地私有，不上传云端)
+面试考点/
